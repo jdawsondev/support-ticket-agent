@@ -7,9 +7,9 @@ yarn-error.log
 logs
 *.log
 
-# MySQL Data Volume
-api/mysql_data/*
-!api/mysql_data/.gitkeep
+# Postgres Data Volume
+api/pg_data/*
+!api/pg_data/.gitkeep
 
 # Artillery output
 *.artillery*
