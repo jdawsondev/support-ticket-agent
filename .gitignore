@@ -7,8 +7,9 @@ yarn-error.log
 logs
 *.log
 
-# SQLite database
-api/orders.db
+# MySQL Data Volume
+api/mysql_data/*
+!api/mysql_data/.gitkeep
 
 # Artillery output
 *.artillery*

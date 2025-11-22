@@ -1,8 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const { Sequelize, DataTypes, Op } = require('sequelize');
 const winston = require('winston');
 const Joi = require('joi');
-const path = require('path');
 
 // --- Logger Setup ---
 const logger = winston.createLogger({
@@ -18,11 +18,17 @@ const logger = winston.createLogger({
 });
 
 // --- Database Setup ---
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: path.join(__dirname, 'orders.db'),
-  logging: (msg) => logger.debug(msg) // Log SQL queries to debug
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    dialect: 'mysql',
+    logging: (msg) => logger.debug(msg)
+  }
+);
 
 const Order = sequelize.define('Order', {
   customerName: {

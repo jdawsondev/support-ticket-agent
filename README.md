@@ -1,29 +1,53 @@
 # Support Ticket Agent - Orders API
 
-This project contains a simple Express.js API for managing orders, backed by a SQLite database. It includes structured logging, request validation, and a "Chaos Monkey" middleware to simulate production failures.
+This project contains a simple Express.js API for managing orders, backed by a MySQL database. It includes structured logging, request validation, and a "Chaos Monkey" middleware to simulate production failures.
 
 ## Project Structure
 
-- `api/`: Contains the Express.js server code and SQLite database.
+- `api/`: Contains the Express.js server code and MySQL Docker configuration.
 - `load-tests/`: Contains Artillery load test definitions.
 
 ## Prerequisites
 
 - Node.js (v14 or higher)
 - npm
+- Docker & Docker Compose
 
 ## Getting Started
 
-### 1. Setup the API
+### 1. Setup the Database
 
-Navigate to the `api` directory and install dependencies:
+Navigate to the `api` directory and start the MySQL container:
 
 ```bash
 cd api
+docker-compose up -d
+```
+
+This will start a MySQL 8.0 instance on port 3306. Data is persisted in `api/mysql_data`.
+
+### 2. Configure Environment
+
+Create a `.env` file in the `api` directory with the following content:
+
+```ini
+DB_HOST=localhost
+DB_USER=user
+DB_PASSWORD=password
+DB_NAME=orders_db
+DB_PORT=3306
+PORT=3000
+```
+
+### 3. Setup the API
+
+Install dependencies:
+
+```bash
 npm install
 ```
 
-### 2. Run the API
+### 4. Run the API
 
 Start the server:
 
@@ -32,7 +56,7 @@ npm start
 ```
 
 The server will start on `http://localhost:3000`.
-A SQLite database file `orders.db` will be created automatically in the `api` directory.
+It will automatically connect to the MySQL database and sync the schema.
 Logs are output to the console and saved to `api/app.log`.
 
 ### API Endpoints
