@@ -1,0 +1,23 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Logs
+logs
+*.log
+
+# SQLite database
+api/orders.db
+
+# Artillery output
+*.artillery*
+
+# OS
+.DS_Store
+
+# Env
+.env
+
+# VSCode
+.vscode/

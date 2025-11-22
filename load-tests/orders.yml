@@ -1,0 +1,87 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      name: "Sustained load"
+    - duration: 30
+      arrivalRate: 10
+      rampTo: 20
+      name: "Ramp up load"
+  defaults:
+    headers:
+      Content-Type: "application/json"
+
+scenarios:
+  - name: "Full Order Lifecycle (Create, Get, Update, Delete)"
+    weight: 5
+    flow:
+      # 1. Create a valid order
+      - post:
+          url: "/orders"
+          json:
+            customerName: "Artillery User {{ $randomString() }}"
+            totalAmount: {{ $randomNumber(10, 1000) }}
+            items:
+              - name: "Load Test Item"
+                price: 10
+          capture:
+            - json: "$.id"
+              as: "orderId"
+          expect:
+            - statusCode: 201
+      
+      # 2. Get the created order
+      - get:
+          url: "/orders/{{ orderId }}"
+          expect:
+            - statusCode: 200
+
+      # 3. Update the order (Valid)
+      - patch:
+          url: "/orders/{{ orderId }}"
+          json:
+            status: "shipped"
+          expect:
+            - statusCode: 200
+
+      # 4. Update the order (Invalid Body - Empty update)
+      - patch:
+          url: "/orders/{{ orderId }}"
+          json: {}
+          expect:
+            - statusCode: 400
+
+      # 5. Delete the order
+      - delete:
+          url: "/orders/{{ orderId }}"
+          expect:
+            - statusCode: 204
+
+  - name: "Search Orders"
+    weight: 3
+    flow:
+      - get:
+          url: "/orders?customerName=Artillery"
+          expect:
+            - statusCode: 200
+
+  - name: "Invalid Create Requests"
+    weight: 2
+    flow:
+      # Missing totalAmount
+      - post:
+          url: "/orders"
+          json:
+            customerName: "Invalid User"
+          expect:
+            - statusCode: 400
+      
+      # Name too short
+      - post:
+          url: "/orders"
+          json:
+            customerName: "Bo"
+            totalAmount: 100
+          expect:
+            - statusCode: 400
