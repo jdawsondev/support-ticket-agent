@@ -1,10 +1,10 @@
 # Support Ticket Agent - Orders API
 
-This project contains a simple Express.js API for managing orders, backed by a MySQL database. It includes structured logging, request validation, and a "Chaos Monkey" middleware to simulate production failures.
+This project contains a simple Express.js API for managing orders, backed by a PostgreSQL database. It includes structured logging, request validation, and a "Chaos Monkey" middleware to simulate production failures.
 
 ## Project Structure
 
-- `api/`: Contains the Express.js server code and MySQL Docker configuration.
+- `api/`: Contains the Express.js server code and PostgreSQL Docker configuration.
 - `load-tests/`: Contains Artillery load test definitions.
 
 ## Prerequisites
@@ -17,14 +17,14 @@ This project contains a simple Express.js API for managing orders, backed by a M
 
 ### 1. Setup the Database
 
-Navigate to the `api` directory and start the MySQL container:
+Navigate to the `api` directory and start the PostgreSQL container:
 
 ```bash
 cd api
 docker-compose up -d
 ```
 
-This will start a MySQL 8.0 instance on port 3306. Data is persisted in `api/mysql_data`.
+This will start a PostgreSQL 15 instance on port 5432. Data is persisted in `api/pg_data`.
 
 ### 2. Configure Environment
 
@@ -35,7 +35,7 @@ DB_HOST=localhost
 DB_USER=user
 DB_PASSWORD=password
 DB_NAME=orders_db
-DB_PORT=3306
+DB_PORT=5432
 PORT=3000
 ```
 
